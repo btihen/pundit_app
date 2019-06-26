@@ -4,7 +4,16 @@
 
 <ul>
 <% users.sort_by(&:id).each do |user| %>
-  <li><%= link_to("User #{user.id}", user_path(user)) %>: <%= user.email %> -- role: <%= user.role %></li>
+  <li>
+    <%= link_to("User #{user.id}", user_path(user)) %>:
+    <%= user.email %> -- role: <%= user.role %>
+    <% if policy(user).destroy? %>
+      <i>
+        <%= link_to "Delete User #{user.id}", user_path(user),
+                    data: {:confirm => 'Are you sure?'}, :method => :delete %>
+      </i>
+    <% end %>
+  </li>
 <% end %>
 </ul>
 
