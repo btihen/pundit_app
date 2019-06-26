@@ -20,22 +20,6 @@ feature 'User index page', :devise do
       expect(page).to have_content "Show all Users"
       expect(page).to have_content "Current User: #{admin.email} -- #{admin.role}"
     end
-    scenario 'has access to admin_show page' do
-      visit user_path(admin)
-
-      # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Show #{admin.email}"
-      expect(page).to have_content "Current User: #{admin.email} -- #{admin.role}"
-    end
-    scenario 'has access to user_show page' do
-      # user = FactoryBot.create :user
-      # signin(user.email, user.password)
-      visit user_path(user)
-
-      # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Show #{user.email}"
-      expect(page).to have_content "Current User: #{admin.email} -- #{admin.role}"
-    end
   end
 
   context 'User loged in as USER' do
@@ -48,20 +32,6 @@ feature 'User index page', :devise do
       # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
       expect(page).to have_content "Home page"
       expect(page).to have_content "Access Denied"
-    end
-    scenario 'has no access to admin_show page and redirected to home page' do
-      visit user_path(admin)
-
-      # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Home page"
-      expect(page).to have_content "Access Denied"
-    end
-    scenario 'has access to user_show page' do
-      visit user_path(user)
-
-      # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Show #{user.email}"
-      expect(page).to have_content "Current User: #{user.email} -- #{user.role}"
     end
   end
 

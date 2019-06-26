@@ -19,8 +19,30 @@ class UsersController < ApplicationController
     render 'show', locals: {user: user, current_user: current_user}
   end
 
+  def edit
+    user = User.find params[:id]
+    authorize user
+
+    render 'edit', locals: {user: user, current_user: current_user}
+  end
+
+  def update
+    user = User.find params[:id]
+    authorize user
+
+    user.update(user_params)
+    if user.save
+      render 'show', locals: {user: user, current_user: current_user}
+    else
+      flash[:alert] = "Opps, there was a problem"
+      render 'edit', locals: {user: user, current_user: current_user}
+    end
+  end
+
   def destroy
     user = User.find params[:id]
+    authorize user
+    
     user.destroy
     redirect_to users_path, notice: 'user deleted'
   end
@@ -30,6 +52,10 @@ class UsersController < ApplicationController
   def user_not_authorized
     flash[:alert] = 'Access Denied'
     redirect_to (request.referrer || root_path)
+  end
+
+  def user_params
+    params.require(:user).permit(:role)
   end
 
 end

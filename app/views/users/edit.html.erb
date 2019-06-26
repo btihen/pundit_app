@@ -1,0 +1,17 @@
+<p hidden id='user_edit' class='pageName'>ID <%= user.id %></p>
+
+<h1>Edit <%= user.email %></h1>
+
+<p><%= link_to("User #{user.id}", user_path(user)) %>: <%= user.email %> -- role: <%= user.role %></p>
+
+<h4>Form to change user role</h4>
+<%= form_for(user) do |f| %>
+  <div class='form-group'>
+    <%= f.label :role %>
+    <%= f.select(:role, User.roles.keys) %>
+  </div>
+  <br>
+  <%= f.submit "Update Role" %>
+<% end %>
+<hr>
+<i>Current User: <%= current_user.email %> -- <%= current_user.role %></i>

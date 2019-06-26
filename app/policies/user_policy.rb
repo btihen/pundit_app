@@ -1,10 +1,4 @@
 class UserPolicy < ApplicationPolicy
-  # attr_reader :current_user, :model
-
-  # def initialize(user = current_user, model)
-  #   @current_user  = current_user
-  #   @model = model
-  # end
 
   def index?
     @user.admin?
@@ -12,7 +6,20 @@ class UserPolicy < ApplicationPolicy
 
   def show?
     # user is either admin or user is getting own record
-    @user.admin? || @user.id == @record.id
+    @user.admin? || (@user.id == @record.id)
+  end
+
+  def edit?
+    # user is admin but can't ones edit own record
+    @user.admin? && (@user.id != @record.id)
+  end
+
+  def update?
+    edit?
+  end
+
+  def destroy?
+    edit?
   end
 
 end
