@@ -4,13 +4,15 @@ FactoryBot.define do
     sequence(:email)      { |n| (Faker::Internet.email).insert(1, n.to_s) }
     password              { 'password' }
     password_confirmation { 'password' }
-    # role                  { 0 }
-    # manager               { false }
+    # role                  { 'users' }
   end
 
-  # factory :admin, parent: :user do
-  #   role                  { 2 }
-  #   manager               { true }
-  # end
+  trait :editor do
+    role                  { 'editor' }
+  end
+
+  trait :admin do
+    role                  { 'admin' }
+  end
 
 end
