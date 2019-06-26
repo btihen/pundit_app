@@ -17,8 +17,19 @@ feature 'User index page', :devise do
 
       # capybara - by default doesn't seen hidden things
       # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Show all Users"
-      expect(page).to have_content "Current User: #{admin.email} -- #{admin.role}"
+      expect(page).to     have_content "Show User"
+      expect(page).to     have_content "Current User: #{admin.email} -- #{admin.role}"
+
+      expect(page).to     have_content "See User #{admin.id}: #{admin.email} -- role: #{admin.role}"
+      expect(page).not_to have_link    "Delete User #{admin.id}", href: user_path(admin.id)
+
+      # edit the other users
+      users = User.all.reject { |u| u.email == admin.email }
+      # pp page.body
+      users.each do |u|
+        expect(page).to   have_content "Edit User #{u.id}: #{u.email} -- role: #{u.role}"
+        expect(page).to   have_link    "Delete User #{u.id}", href: user_path(u)
+      end
     end
   end
 
@@ -30,8 +41,16 @@ feature 'User index page', :devise do
       visit users_path
 
       # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Home page"
-      expect(page).to have_content "Access Denied"
+      expect(page).to     have_content "Show User"
+      expect(page).to     have_content "Current User: #{user.email} -- #{user.role}"
+      expect(page).to     have_content "See User #{user.id}: #{user.email} -- role: #{user.role}"
+      expect(page).not_to have_link    "Delete User #{user.id}", href: user_path(user.id)
+      # doesn't see other users
+      users = User.all.reject { |u| u.email == user.email }
+      users.each do |u|
+        expect(page).not_to have_content "See User #{u.id}: #{u.email} -- role: #{u.role}"
+        expect(page).not_to have_link    "Delete User #{u.id}", href: user_path(u.id)
+      end
     end
   end
 

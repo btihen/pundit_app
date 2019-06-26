@@ -1,11 +1,15 @@
 <p hidden id='users_index' class='pageName'></p>
 
-<h1>Show all Users</h1>
+<h1>Show User(s)</h1>
 
 <ul>
 <% users.sort_by(&:id).each do |user| %>
   <li>
-    <%= link_to("User #{user.id}", user_path(user)) %>:
+    <% if policy(user).edit? %>
+      <%= link_to("Edit User #{user.id}", edit_user_path(user)) %>:
+    <% elsif policy(user).show? %>
+      <%= link_to("See User #{user.id}", user_path(user)) %>:
+    <% end %>
     <%= user.email %> -- role: <%= user.role %>
     <% if policy(user).destroy? %>
       <i>

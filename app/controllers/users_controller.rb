@@ -6,8 +6,9 @@ class UsersController < ApplicationController
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   def index
-    users = User.all
-    authorize User
+    # users = User.all
+    # authorize User
+    users = UserPolicy::UserIndexScope.new(current_user, User).resolve
 
     render 'index', locals: {users: users, current_user: current_user}
   end
@@ -42,7 +43,7 @@ class UsersController < ApplicationController
   def destroy
     user = User.find params[:id]
     authorize user
-    
+
     user.destroy
     redirect_to users_path, notice: 'user deleted'
   end

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Contacts", type: :request do
+RSpec.describe "Users Index", type: :request do
 
   include Devise::Test::IntegrationHelpers
 
@@ -37,41 +37,16 @@ RSpec.describe "Contacts", type: :request do
     it 'has access to "home" page - without an admin link' do
       get users_path
 
-      expect(response).to           have_http_status(302)
-      expect(response).to           redirect_to(root_path)
-      expect(response.body).to      match "<body>You are being <a href=\"#{request.base_url}/\">redirected</a>"
-      follow_redirect!
       expect(response).to           be_successful
       expect(response).to           have_http_status(200)
 
       # check the resulting data
-      expect(response.body).to      match "<p hidden id='root' class='pageName'>"
-      expect(flash[:alert]).to      match "Access Denied"
-    end
-  end
-
-  xcontext 'authenticated access as EDITOR' do
-    before(:each) do
-      # when using confirmable - https://stackoverflow.com/questions/9482739/uncaught-throw-warden-in-devise-testing
-      # attendee.confirmed_at = Time.zone.now
-      # attendee.save
-      sign_in editor
-      # expect(warden.authenticated?(:user)).to be true
-    end
-    after(:each) do
-      sign_out editor
-      # expect(warden.authenticated?(:user)).to be false
-    end
-    it 'has access to "home" page - without an admin link' do
-      get users_path
-      expect(response).to           be_successful
-      expect(response).to           have_http_status(200)
-
-      # check the resulting data - blocked not listed in index
       expect(response.body).to      match "<p hidden id='users_index' class='pageName'>"
-      expect(response.body).to      match editor.email
-      expect(response.body).to      match editor.role
-      # TODO: add test that admin doesn't work
+      expect(response.body).to      match "Show User"
+      expect(response.body).to      match "Current User: #{user.email} -- #{user.role}"
+
+      expect(response.body).to      match "See User #{user.id}"
+      expect(response.body).not_to  match "Delete User #{user.id}"
     end
   end
 
@@ -94,8 +69,14 @@ RSpec.describe "Contacts", type: :request do
 
       # check the resulting data - blocked not listed in index
       expect(response.body).to      match "<p hidden id='users_index' class='pageName'>"
-      expect(response.body).to      match admin.email
-      expect(response.body).to      match admin.role
+      expect(response.body).to      match "Show User"
+      expect(response.body).to      match "Current User: #{admin.email} -- #{admin.role}"
+
+      expect(response.body).to      match "See User #{admin.id}"
+      expect(response.body).not_to  match "Delete User #{admin.id}"
+
+      expect(response.body).to      match "Edit User #{user.id}"
+      expect(response.body).to      match "Delete User #{user.id}"
     end
   end
 
