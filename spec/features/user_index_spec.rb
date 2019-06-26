@@ -20,14 +20,14 @@ feature 'User index page', :devise do
   end
 
   context 'User loged in as USER' do
-    scenario 'sees own email address' do
+    scenario 'has no access and redirected to home page' do
       user = FactoryBot.create :user
       signin(user.email, user.password)
       visit users_path
 
       # expect(page).to have_content "<p hidden id='users_index' class='pageName'>"
-      expect(page).to have_content "Show all Users"
-      expect(page).to have_content "Current User: #{user.email} -- #{user.role}"
+      expect(page).to have_content "Home page"
+      expect(page).to have_content "Access Denied"
     end
   end
 

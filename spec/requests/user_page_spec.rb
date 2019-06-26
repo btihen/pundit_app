@@ -9,17 +9,16 @@ RSpec.describe "Contacts", type: :request do
   let!(:admin)    { FactoryBot.create :user, :admin }
 
   context 'unauthenticated access' do
-    xit 'redirects to the sign-in page' do
-      get samurai.home_path
+    it 'redirects to the sign-in page' do
+      get users_path
+
       expect(response).to           have_http_status(302)
       expect(response).to           redirect_to(new_user_session_path)
-      expect(response.body).to      match "<body>You are being <a href=\"#{request.base_url}/samurai/users/sign_in\">redirected</a>"
+      expect(response.body).to      match "<body>You are being <a href=\"#{request.base_url}/users/sign_in\">redirected</a>"
       follow_redirect!
       expect(response).to           be_successful
       expect(response).to           have_http_status(200)
-
-      # check the resulting data
-      expect(response.body).to      match "<p hidden id='signin' class='pageName'></p>"
+      expect(response.body).to      match "<p hidden id='login' class='pageName'></p>"
     end
   end
 
@@ -38,16 +37,20 @@ RSpec.describe "Contacts", type: :request do
     it 'has access to "home" page - without an admin link' do
       get users_path
 
+      expect(response).to           have_http_status(302)
+      expect(response).to           redirect_to(root_path)
+      expect(response.body).to      match "<body>You are being <a href=\"#{request.base_url}/\">redirected</a>"
+      follow_redirect!
       expect(response).to           be_successful
       expect(response).to           have_http_status(200)
 
-      expect(response.body).to      match "<p hidden id='users_index' class='pageName'>"
-      expect(response.body).to      match user.email
-      expect(response.body).to      match user.role
+      # check the resulting data
+      expect(response.body).to      match "<p hidden id='root' class='pageName'>"
+      expect(flash[:alert]).to      match "Access Denied"
     end
   end
 
-  context 'authenticated access as EDITOR' do
+  xcontext 'authenticated access as EDITOR' do
     before(:each) do
       # when using confirmable - https://stackoverflow.com/questions/9482739/uncaught-throw-warden-in-devise-testing
       # attendee.confirmed_at = Time.zone.now
