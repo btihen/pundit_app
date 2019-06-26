@@ -4,6 +4,8 @@
 
 <h4>Current User: <%= current_user.email %> -- <%= current_user.role %></h4>
 
-<% users.each do |user| %>
-
+<ul>
+<% users.sort_by(&:id).each do |user| %>
+  <li>User <%= user.id %>: <%= user.email %> -- <%= user.role %></li>
 <% end %>
+</ul>

@@ -10,4 +10,9 @@ class UserPolicy < ApplicationPolicy
     @user.admin?
   end
 
+  def show?
+    # user is either admin or user is getting own record
+    @user.admin? || @user.id == @record.id
+  end
+
 end

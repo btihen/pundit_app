@@ -8,13 +8,14 @@ class UsersController < ApplicationController
   def index
     users = User.all
     authorize User
-    # authorize current_user, User  # invokes pundit policy
 
     render 'index', locals: {users: users, current_user: current_user}
   end
 
   def show
     user = User.find params[:id]
+    authorize user
+
     render 'show', locals: {user: user, current_user: current_user}
   end
 
